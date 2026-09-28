@@ -56,8 +56,8 @@ export function OtpForm({
           <input
             name="token"
             inputMode="numeric"
-            pattern={mode === "login" ? "[0-9]{6,8}" : "[0-9]{6}"}
-            maxLength={mode === "login" ? 8 : 6}
+            pattern="[0-9]{6,8}"
+            maxLength={8}
             required
             autoComplete="one-time-code"
             className="w-full rounded-xl border border-slate-300 px-4 py-3 text-center text-2xl tracking-[.45em]"
