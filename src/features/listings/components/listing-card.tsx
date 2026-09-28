@@ -32,7 +32,9 @@ export function ListingCard({ listing }: { listing: MarketplaceListing }) {
           {formatNaira(listing.price_kobo)}
         </p>
         {listing.location_label ? (
-          <p className="mt-2 text-sm text-slate-500">{listing.location_label}</p>
+          <p className="mt-2 text-sm text-slate-500">
+            {listing.location_label}
+          </p>
         ) : null}
       </div>
     </Link>
