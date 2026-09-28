@@ -41,7 +41,9 @@ export async function createListingAction(
     profile.verification_status !== "verified" ||
     profile.account_status !== "active"
   ) {
-    return { error: "Only verified active student accounts can publish listings." };
+    return {
+      error: "Only verified active student accounts can publish listings.",
+    };
   }
 
   const { data, error } = await supabase
