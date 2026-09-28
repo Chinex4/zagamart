@@ -1,16 +1,3 @@
-import {
-  BadgeCheck,
-  Bell,
-  CircleDollarSign,
-  FileClock,
-  Gauge,
-  Gavel,
-  List,
-  Settings,
-  ShieldAlert,
-  ShoppingBag,
-  Users,
-} from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { requireAdmin } from "@/features/auth/services/auth.service";
 
@@ -26,21 +13,21 @@ export default async function AdminLayout({
 async function AdminGuard({ children }: { children: React.ReactNode }) {
   const user = await requireAdmin();
   const items = [
-    { href: "/admin", label: "Overview", icon: Gauge },
+    { href: "/admin", label: "Overview", icon: "gauge" as const },
     {
       href: "/admin/verifications",
       label: "KYC verifications",
-      icon: BadgeCheck,
+      icon: "badge-check" as const,
     },
-    { href: "/admin/users", label: "Users", icon: Users },
-    { href: "/admin/listings", label: "Listings", icon: ShoppingBag },
-    { href: "/admin/transactions", label: "Transactions", icon: List },
-    { href: "/admin/fraud", label: "Fraud flags", icon: ShieldAlert },
-    { href: "/admin/disputes", label: "Disputes", icon: Gavel },
-    { href: "/admin/payouts", label: "Payouts", icon: CircleDollarSign },
-    { href: "/admin/notifications", label: "Notifications", icon: Bell },
-    { href: "/admin/audit", label: "Audit logs", icon: FileClock },
-    { href: "/admin/settings", label: "Settings", icon: Settings },
+    { href: "/admin/users", label: "Users", icon: "users" as const },
+    { href: "/admin/listings", label: "Listings", icon: "shopping-bag" as const },
+    { href: "/admin/transactions", label: "Transactions", icon: "list" as const },
+    { href: "/admin/fraud", label: "Fraud flags", icon: "shield-alert" as const },
+    { href: "/admin/disputes", label: "Disputes", icon: "gavel" as const },
+    { href: "/admin/payouts", label: "Payouts", icon: "circle-dollar-sign" as const },
+    { href: "/admin/notifications", label: "Notifications", icon: "bell" as const },
+    { href: "/admin/audit", label: "Audit logs", icon: "file-clock" as const },
+    { href: "/admin/settings", label: "Settings", icon: "settings" as const },
   ];
   return (
     <DashboardShell
