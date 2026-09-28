@@ -2,10 +2,7 @@
 
 import { useActionState } from "react";
 
-import {
-  resetPasswordAction,
-  type AuthActionState,
-} from "@/features/auth/actions/auth.actions";
+import { resetPasswordAction, type AuthActionState } from "@/features/auth/actions/auth.actions";
 import { AuthMessage } from "@/features/auth/components/auth-message";
 
 const initialState: AuthActionState = {};
@@ -32,9 +29,7 @@ export function ResetPasswordForm() {
         />
       </label>
       <label className="block">
-        <span className="mb-2 block text-sm font-medium">
-          Confirm password
-        </span>
+        <span className="mb-2 block text-sm font-medium">Confirm password</span>
         <input
           className={inputClassName}
           name="confirmPassword"
