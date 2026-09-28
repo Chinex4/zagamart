@@ -32,7 +32,7 @@ export default async function TransactionDetailPage({
             Protected transaction
           </p>
           <h1 className="mt-2 text-2xl font-bold text-slate-950">
-            {transaction.listings?.title ?? "Marketplace purchase"}
+            {transaction.listings?.[0]?.title ?? "Marketplace purchase"}
           </h1>
           <p className="mt-4 text-3xl font-bold text-slate-950">{amount}</p>
           <div className="mt-6 rounded-2xl bg-slate-100 p-4">
