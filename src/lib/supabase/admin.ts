@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { publicEnvironment, getServerEnvironment } from "@/lib/env";
+
+import { getServerEnvironment, publicEnvironment } from "@/lib/env";
 
 export function createAdminClient() {
   const serverEnvironment = getServerEnvironment();
@@ -8,7 +9,9 @@ export function createAdminClient() {
     !publicEnvironment.NEXT_PUBLIC_SUPABASE_URL ||
     !serverEnvironment.SUPABASE_SERVICE_ROLE_KEY
   ) {
-    throw new Error("Supabase privileged environment variables are not configured.");
+    throw new Error(
+      "Supabase privileged environment variables are not configured.",
+    );
   }
 
   return createClient(
