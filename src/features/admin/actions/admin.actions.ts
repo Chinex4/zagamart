@@ -55,7 +55,10 @@ export async function updatePayoutStatusAction(formData: FormData) {
   const providerReference = String(formData.get("providerReference") ?? "");
   const failureReason = String(formData.get("failureReason") ?? "");
 
-  if (!payoutId || !["processing", "paid", "failed", "cancelled"].includes(status)) {
+  if (
+    !payoutId ||
+    !["processing", "paid", "failed", "cancelled"].includes(status)
+  ) {
     throw new Error("Invalid payout update.");
   }
 
