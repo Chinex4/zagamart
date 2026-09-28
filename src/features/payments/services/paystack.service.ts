@@ -82,9 +82,7 @@ export function hasValidPaystackSignature(
     createHmac("sha512", key()).update(body).digest("hex"),
   );
   const actual = Buffer.from(signature);
-  return (
-    expected.length === actual.length && timingSafeEqual(expected, actual)
-  );
+  return expected.length === actual.length && timingSafeEqual(expected, actual);
 }
 
 export interface PaystackBank {
@@ -117,11 +115,7 @@ export function createPaystackTransferRecipient(input: {
   return request<{
     recipient_code: string;
     name: string;
-    details: {
-      bank_name: string;
-      bank_code: string;
-      account_number: string;
-    };
+    details: { bank_name: string; bank_code: string; account_number: string };
   }>("/transferrecipient", {
     method: "POST",
     body: JSON.stringify({
