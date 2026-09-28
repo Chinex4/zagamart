@@ -2,7 +2,9 @@
 
 import { useActionState } from "react";
 
-import { forgotPasswordAction   type AuthActionState,
+import {
+  forgotPasswordAction,
+  type AuthActionState,
 } from "@/features/auth/actions/auth.actions";
 import { AuthMessage } from "@/features/auth/components/auth-message";
 
