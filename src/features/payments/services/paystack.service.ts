@@ -82,7 +82,9 @@ export function hasValidPaystackSignature(
     createHmac("sha512", key()).update(body).digest("hex"),
   );
   const actual = Buffer.from(signature);
-  return expected.length === actual.length && timingSafeEqual(expected, actual);
+  return (
+    expected.length === actual.length && timingSafeEqual(expected, actual)
+  );
 }
 
 export interface PaystackBank {
