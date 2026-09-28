@@ -2,10 +2,11 @@
 
 import { useActionState } from "react";
 
-import { resetPasswordAction } from "@/features/auth/actions/auth.actions";
+import { resetPasswordAction   type AuthActionState,
+} from "@/features/auth/actions/auth.actions";
 import { AuthMessage } from "@/features/auth/components/auth-message";
 
-const initialState = {};
+const initialState: AuthActionState = {};
 const inputClassName =
   "w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100";
 
