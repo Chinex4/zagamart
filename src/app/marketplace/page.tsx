@@ -8,13 +8,21 @@ export const dynamic = "force-dynamic";
 export default async function MarketplacePage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string; condition?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    condition?: string;
+    min?: string;
+    max?: string;
+  }>;
 }) {
   const params = await searchParams;
   const listings = await getMarketplaceListings({
     query: params.q?.trim() || undefined,
     category: params.category || undefined,
     condition: params.condition || undefined,
+    minPriceKobo: params.min ? Number(params.min) * 100 : undefined,
+    maxPriceKobo: params.max ? Number(params.max) * 100 : undefined,
   });
 
   return (
@@ -52,13 +60,62 @@ export default async function MarketplacePage({
             Browse items published by verified students.
           </p>
         </div>
-        <form className="mt-8 flex max-w-2xl gap-3">
+        <form className="mt-8 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-6">
           <input
             name="q"
             defaultValue={params.q}
             placeholder="Search listings"
-            className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3"
+            className="min-w-0 rounded-xl border border-slate-300 bg-white px-4 py-3 sm:col-span-2"
           />
+          <select
+            name="category"
+            defaultValue={params.category}
+            className="rounded-xl border border-slate-300 bg-white px-3"
+          >
+            <option value="">All categories</option>
+            {[
+              "Phones",
+              "Laptops",
+              "Electronics",
+              "Books",
+              "Fashion",
+              "Furniture",
+              "Accessories",
+              "Hostel/Home",
+            ].map((x) => (
+              <option key={x}>{x}</option>
+            ))}
+          </select>
+          <select
+            name="condition"
+            defaultValue={params.condition}
+            className="rounded-xl border border-slate-300 bg-white px-3"
+          >
+            <option value="">Any condition</option>
+            {["New", "Like New", "Good", "Fair"].map((x) => (
+              <option key={x}>{x}</option>
+            ))}
+          </select>
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              aria-label="Minimum price"
+              name="min"
+              type="number"
+              min="0"
+              defaultValue={params.min}
+              placeholder="Min ₦"
+              className="min-w-0 rounded-xl border px-3"
+            />
+            <input
+              aria-label="Maximum price"
+              name="max"
+              type="number"
+              min="0"
+              defaultValue={params.max}
+              placeholder="Max ₦"
+              className="min-w-0 rounded-xl border px-3"
+            />
+          </div>
           <button className="rounded-xl bg-slate-950 px-5 py-3 font-semibold text-white">
             Search
           </button>

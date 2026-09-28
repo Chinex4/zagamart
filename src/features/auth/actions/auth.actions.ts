@@ -8,7 +8,10 @@ import {
   registrationSchema,
   resetPasswordSchema,
 } from "@/features/auth/schemas/auth.schema";
-import { normalizeMatricNumber } from "@/features/auth/services/auth.service";
+import {
+  canAccessAdmin,
+  normalizeMatricNumber,
+} from "@/features/auth/services/auth.service";
 import { publicEnvironment } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
 
@@ -87,6 +90,81 @@ export async function loginAction(
   }
 
   redirect("/dashboard");
+}
+
+export async function adminLoginAction(
+  _state: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsed = loginSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+  if (!parsed.success)
+    return { error: "Enter valid administrator credentials." };
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email.toLowerCase(),
+    password: parsed.data.password,
+  });
+  if (error || !data.user)
+    return { error: "The administrator credentials are invalid." };
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role,account_status")
+    .eq("id", data.user.id)
+    .single();
+  if (!canAccessAdmin(profile)) {
+    await supabase.auth.signOut();
+    return { error: "The administrator credentials are invalid." };
+  }
+  redirect("/admin");
+}
+
+export async function verifyEmailOtpAction(
+  _state: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
+  const token = String(formData.get("token") ?? "").replace(/\s/g, "");
+  if (!email.includes("@") || !/^\d{6}$/.test(token))
+    return { error: "Enter your email and the 6-digit code." };
+  const supabase = await createClient();
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "signup",
+  });
+  if (error)
+    return {
+      error: "That code is invalid or has expired. Request a new code.",
+    };
+  redirect("/dashboard");
+}
+
+export async function resendEmailOtpAction(
+  _state: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
+  if (!email.includes("@"))
+    return { error: "Enter the email used to register." };
+  const supabase = await createClient();
+  await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: `${publicEnvironment.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  });
+  return {
+    success:
+      "If the account is awaiting verification, a new code has been sent.",
+  };
 }
 
 export async function logoutAction(): Promise<void> {

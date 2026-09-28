@@ -40,6 +40,21 @@ export function ListingForm() {
         name="locationLabel"
         placeholder="e.g. Site II gate"
       />
+      <label className="block rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5">
+        <span className="block text-sm font-semibold text-slate-700">
+          Product images
+        </span>
+        <span className="mt-1 block text-xs text-slate-500">
+          Up to 5 JPG, PNG, or WebP files · 5 MB each
+        </span>
+        <input
+          name="images"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          className="mt-4 block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:font-semibold file:text-white"
+        />
+      </label>
       <label className="block">
         <span className="mb-2 block text-sm font-medium text-slate-700">
           Description

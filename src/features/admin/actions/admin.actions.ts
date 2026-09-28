@@ -74,3 +74,29 @@ export async function updatePayoutStatusAction(formData: FormData) {
 
   revalidatePath("/admin/payouts");
 }
+
+export async function resolveDisputeAction(formData: FormData) {
+  const admin = await requireAdmin();
+  const disputeId = String(formData.get("disputeId") ?? "");
+  const status = String(formData.get("status") ?? "");
+  const note = String(formData.get("note") ?? "").trim();
+  if (
+    !disputeId ||
+    !["resolved_buyer", "resolved_seller"].includes(status) ||
+    note.length < 5
+  )
+    throw new Error("A valid resolution and note are required.");
+  const { error } = await createAdminClient().rpc(
+    "resolve_transaction_dispute",
+    {
+      p_dispute_id: disputeId,
+      p_admin_id: admin.id,
+      p_outcome: status,
+      p_resolution_note: note,
+    },
+  );
+  if (error)
+    throw new Error("The dispute could not be resolved in its current state.");
+  revalidatePath(`/admin/disputes/${disputeId}`);
+  revalidatePath("/admin/disputes");
+}

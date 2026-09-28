@@ -60,6 +60,39 @@ export async function createListingAction(
 
   if (error || !data) return { error: "Unable to publish the listing." };
 
+  const images = formData
+    .getAll("images")
+    .filter((value): value is File => value instanceof File && value.size > 0);
+  if (
+    images.length > 5 ||
+    images.some(
+      (file) =>
+        !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
+        file.size > 5 * 1024 * 1024,
+    )
+  ) {
+    await supabase.from("listings").delete().eq("id", data.id);
+    return {
+      error: "Upload up to five JPG, PNG, or WebP images under 5 MB each.",
+    };
+  }
+  for (const [position, file] of images.entries()) {
+    const extension =
+      file.type === "image/png"
+        ? "png"
+        : file.type === "image/webp"
+          ? "webp"
+          : "jpg";
+    const path = `${user.id}/${data.id}/${crypto.randomUUID()}.${extension}`;
+    const upload = await supabase.storage
+      .from("listing-images")
+      .upload(path, file, { contentType: file.type });
+    if (!upload.error)
+      await supabase
+        .from("listing_images")
+        .insert({ listing_id: data.id, storage_path: path, position });
+  }
+
   revalidatePath("/marketplace");
   redirect(`/marketplace/${data.id}`);
 }

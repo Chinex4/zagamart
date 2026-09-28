@@ -6,6 +6,14 @@ export function normalizeMatricNumber(value: string): string {
   return value.trim().replace(/\s+/g, "").toUpperCase();
 }
 
+export type AccessProfile = { role: string; account_status: string } | null;
+export function canAccessAdmin(profile: AccessProfile): boolean {
+  return profile?.role === "admin" && profile.account_status === "active";
+}
+export function canAccessStudent(profile: AccessProfile): boolean {
+  return profile?.role === "student" && profile.account_status === "active";
+}
+
 export async function requireUser() {
   const supabase = await createClient();
   const {
@@ -44,7 +52,7 @@ export async function requireAdmin() {
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "admin" || profile.account_status !== "active") {
+  if (!canAccessAdmin(profile)) {
     redirect("/dashboard");
   }
 
