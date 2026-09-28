@@ -1,0 +1,19 @@
+name: Prettier Debug
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Show exact Prettier diff
+        run: |
+          npx prettier src/features/fraud/services/fraud-score.test.ts --write
+          git diff -- src/features/fraud/services/fraud-score.test.ts
