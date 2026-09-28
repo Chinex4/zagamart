@@ -19,10 +19,18 @@ const cleanSignals: FraudSignals = {
 
 describe("fraud scoring", () => {
   it("scores every legacy risk signal at its documented weight", () => {
-    expect(calculateFraudScore({ ...cleanSignals, kycSubmissions: 3 })).toBe(20);
-    expect(calculateFraudScore({ ...cleanSignals, hasRejectedKyc: true })).toBe(10);
-    expect(calculateFraudScore({ ...cleanSignals, listingsLast10Minutes: 5 })).toBe(25);
-    expect(calculateFraudScore({ ...cleanSignals, listingsLast24Hours: 12 })).toBe(15);
+    expect(calculateFraudScore({ ...cleanSignals, kycSubmissions: 3 })).toBe(
+      20,
+    );
+    expect(
+      calculateFraudScore({ ...cleanSignals, hasRejectedKyc: true }),
+    ).toBe(10);
+    expect(
+      calculateFraudScore({ ...cleanSignals, listingsLast10Minutes: 5 }),
+    ).toBe(25);
+    expect(
+      calculateFraudScore({ ...cleanSignals, listingsLast24Hours: 12 }),
+    ).toBe(15);
     expect(
       calculateFraudScore({
         ...cleanSignals,
@@ -37,7 +45,9 @@ describe("fraud scoring", () => {
         sellerSales: 2,
       }),
     ).toBe(20);
-    expect(calculateFraudScore({ ...cleanSignals, cancelledTransactions: 3 })).toBe(15);
+    expect(
+      calculateFraudScore({ ...cleanSignals, cancelledTransactions: 3 }),
+    ).toBe(15);
     expect(
       calculateFraudScore({
         ...cleanSignals,
