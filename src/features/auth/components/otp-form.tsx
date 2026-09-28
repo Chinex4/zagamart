@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import {
   resendEmailOtpAction,
+  resendLoginOtpAction,
   verifyEmailOtpAction,
   verifyLoginOtpAction,
   type AuthActionState,
@@ -21,10 +22,10 @@ export function OtpForm({
     {} as AuthActionState,
   );
   const [resend, resendAction, resending] = useActionState(
-    resendEmailOtpAction,
+    mode === "login" ? resendLoginOtpAction : resendEmailOtpAction,
     {} as AuthActionState,
   );
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(60);
   useEffect(() => {
     if (!seconds) return;
     const timer = setInterval(
@@ -50,13 +51,13 @@ export function OtpForm({
         </label>
         <label className="block">
           <span className="mb-2 block text-sm font-medium">
-            6-digit verification code
+            Verification code
           </span>
           <input
             name="token"
             inputMode="numeric"
-            pattern="[0-9]{6}"
-            maxLength={6}
+            pattern={mode === "login" ? "[0-9]{6,8}" : "[0-9]{6}"}
+            maxLength={mode === "login" ? 8 : 6}
             required
             autoComplete="one-time-code"
             className="w-full rounded-xl border border-slate-300 px-4 py-3 text-center text-2xl tracking-[.45em]"
@@ -69,8 +70,7 @@ export function OtpForm({
           {pending ? "Verifying…" : "Verify email"}
         </button>
       </form>
-      {mode === "signup" ? (
-        <form
+      <form
           action={async (data) => {
             resendAction(data);
             setSeconds(60);
@@ -96,10 +96,9 @@ export function OtpForm({
               ? `Resend available in ${seconds}s`
               : resending
                 ? "Sending…"
-                : "Resend code"}
+                : "Resend verification code"}
           </button>
-        </form>
-      ) : null}
+      </form>
     </div>
   );
 }
