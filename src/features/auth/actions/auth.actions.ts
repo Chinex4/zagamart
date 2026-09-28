@@ -166,7 +166,7 @@ export async function verifyEmailOtpAction(
   const { error } = await supabase.auth.verifyOtp({
     email,
     token,
-    type: "email",
+    type: "signup",
   });
   if (error)
     return {
@@ -202,13 +202,18 @@ export async function verifyLoginOtpAction(
   _state: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
   const token = String(formData.get("token") ?? "").replace(/\s/g, "");
   if (!email.includes("@") || !/^\d{6}$/.test(token))
     return { error: "Enter your email and the 6-digit code." };
   const supabase = await createClient();
   const { data, error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
-  if (error || !data.user) return { error: "That code is invalid or has expired. Request a new code." };
+  if (error || !data.user)
+    return {
+      error: "That code is invalid or has expired. Request a new code.",
+    };
   const { data: profile } = await supabase
     .from("profiles")
     .select("role,account_status")
@@ -216,21 +221,6 @@ export async function verifyLoginOtpAction(
     .single();
   if (canAccessAdmin(profile)) redirect("/admin");
   redirect("/dashboard");
-}
-
-export async function resendLoginOtpAction(
-  _state: AuthActionState,
-  formData: FormData,
-): Promise<AuthActionState> {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  if (!email.includes("@")) return { error: "Enter your account email." };
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: { shouldCreateUser: false },
-  });
-  if (error) return { error: "Please wait before requesting another code." };
-  return { success: "A new login code has been sent." };
 }
 
 export async function logoutAction(): Promise<void> {
