@@ -1,9 +1,5 @@
 export type ListingStatus =
-  | "draft"
-  | "active"
-  | "reserved"
-  | "sold"
-  | "archived";
+  "draft" | "active" | "reserved" | "sold" | "archived";
 
 export interface MarketplaceListing {
   id: string;
