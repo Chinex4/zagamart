@@ -7,7 +7,10 @@ export const kycSubmissionSchema = z.object({
 
 export const kycFileSchema = z.object({
   type: z.enum(["image/jpeg", "image/png", "application/pdf"]),
-  size: z.number().positive().max(5 * 1024 * 1024),
+  size: z
+    .number()
+    .positive()
+    .max(5 * 1024 * 1024),
 });
 
 export const allowedKycMimeTypes = [
