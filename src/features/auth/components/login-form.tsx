@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useActionState } from "react";
 
-import { loginAction, type AuthActionState } from "@/features/auth/actions/auth.actions";
+import {
+  loginAction,
+  type AuthActionState,
+} from "@/features/auth/actions/auth.actions";
 import { AuthMessage } from "@/features/auth/components/auth-message";
 
 const initialState: AuthActionState = {};
