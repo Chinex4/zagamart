@@ -233,8 +233,8 @@ export async function verifyLoginOtpAction(
     .trim()
     .toLowerCase();
   const token = String(formData.get("token") ?? "").replace(/\s/g, "");
-  if (!email.includes("@") || !/^\d{6}$/.test(token))
-    return { error: "Enter your email and the 6-digit code." };
+  if (!email.includes("@") || !/^\d{6,8}$/.test(token))
+    return { error: "Enter your email and the 6 to 8-digit code." };
   const supabase = await createClient();
   const { data, error } = await supabase.auth.verifyOtp({
     email,
