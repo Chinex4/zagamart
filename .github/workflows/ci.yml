@@ -22,10 +22,12 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - name: Format source
-        run: |
-          npm run format
-          git diff --exit-code
+      - name: Apply formatter
+        run: npm run format
+      - name: Commit formatter output
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: apply repository Prettier output"
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
