@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useActionState } from "react";
 
-import { registerAction   type AuthActionState,
+import {
+  registerAction,
+  type AuthActionState,
 } from "@/features/auth/actions/auth.actions";
 import { AuthMessage } from "@/features/auth/components/auth-message";
 
