@@ -8,7 +8,9 @@ export async function createClient() {
     !publicEnvironment.NEXT_PUBLIC_SUPABASE_URL ||
     !publicEnvironment.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
-    throw new Error("Supabase public environment variables are not configured.");
+    throw new Error(
+      "Supabase public environment variables are not configured.",
+    );
   }
 
   const cookieStore = await cookies();
