@@ -101,7 +101,6 @@ export async function resolveDisputeAction(formData: FormData) {
   revalidatePath("/admin/disputes");
 }
 
-
 export async function updateEmailLoginOtpSettingAction(formData: FormData) {
   const admin = await requireAdmin();
   const enabled = String(formData.get("enabled")) === "true";
