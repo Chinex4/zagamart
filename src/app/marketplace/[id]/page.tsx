@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getListingById } from "@/features/listings/services/listing.service";
-import { startCheckoutAction } from "@/features/transactions/actions/checkout.actions";
 
 export const dynamic = "force-dynamic";
 
@@ -49,19 +48,18 @@ export default async function ListingDetailPage({
             <p className="whitespace-pre-wrap leading-7 text-slate-700">
               {listing.description}
             </p>
-            <form action={startCheckoutAction} className="mt-8">
-              <input type="hidden" name="listingId" value={listing.id} />
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700"
+            <div className="mt-8">
+              <Link
+                href={`/checkout/${listing.id}`}
+                className="block w-full rounded-xl bg-blue-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-700"
               >
-                Buy securely
-              </button>
+                Review secure checkout
+              </Link>
               <p className="mt-3 text-center text-xs text-slate-500">
                 Payment is verified by Zagamart before the transaction moves
                 into its protected paid state.
               </p>
-            </form>
+            </div>
           </section>
         </div>
       </div>
