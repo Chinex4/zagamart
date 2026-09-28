@@ -22,10 +22,6 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - name: Format source
-        run: |
-          npm run format
-          git diff --exit-code
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
