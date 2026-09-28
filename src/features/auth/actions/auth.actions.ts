@@ -14,6 +14,7 @@ import {
 } from "@/features/auth/services/auth.service";
 import { publicEnvironment } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export type AuthActionState = {
   error?: string;
@@ -74,19 +75,37 @@ export async function loginAction(
     email: formData.get("email"),
     password: formData.get("password"),
   });
+  if (!parsed.success) return { error: "Enter a valid email address and password." };
 
-  if (!parsed.success) {
-    return { error: "Enter a valid email address and password." };
-  }
-
+  const email = parsed.data.email.toLowerCase();
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email.toLowerCase(),
+    email,
     password: parsed.data.password,
   });
 
   if (error) {
+    if (error.code === "email_not_confirmed") {
+      await supabase.auth.resend({ type: "signup", email });
+      redirect(`/verify-email?email=${encodeURIComponent(email)}`);
+    }
     return { error: "The email or password is incorrect." };
+  }
+
+  const { data: setting } = await createAdminClient()
+    .from("system_settings")
+    .select("value")
+    .eq("key", "email_login_otp_enabled")
+    .maybeSingle();
+
+  if (setting?.value === true) {
+    await supabase.auth.signOut();
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false },
+    });
+    if (otpError) return { error: "We could not send your login code. Please try again." };
+    redirect(`/verify-login?email=${encodeURIComponent(email)}`);
   }
 
   redirect("/dashboard");
@@ -135,7 +154,7 @@ export async function verifyEmailOtpAction(
   const { error } = await supabase.auth.verifyOtp({
     email,
     token,
-    type: "signup",
+    type: "email",
   });
   if (error)
     return {
@@ -165,6 +184,35 @@ export async function resendEmailOtpAction(
     success:
       "If the account is awaiting verification, a new code has been sent.",
   };
+}
+
+export async function verifyLoginOtpAction(
+  _state: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const token = String(formData.get("token") ?? "").replace(/\s/g, "");
+  if (!email.includes("@") || !/^\d{6}$/.test(token))
+    return { error: "Enter your email and the 6-digit code." };
+  const supabase = await createClient();
+  const { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+  if (error) return { error: "That code is invalid or has expired. Request a new code." };
+  redirect("/dashboard");
+}
+
+export async function resendLoginOtpAction(
+  _state: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!email.includes("@")) return { error: "Enter your account email." };
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false },
+  });
+  if (error) return { error: "Please wait before requesting another code." };
+  return { success: "A new login code has been sent." };
 }
 
 export async function logoutAction(): Promise<void> {
