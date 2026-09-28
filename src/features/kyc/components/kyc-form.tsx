@@ -2,9 +2,12 @@
 
 import { useActionState } from "react";
 
-import { submitKycAction } from "@/features/kyc/actions/kyc.actions";
+import {
+  submitKycAction,
+  type KycActionState,
+} from "@/features/kyc/actions/kyc.actions";
 
-const initialState = {};
+const initialState: KycActionState = {};
 
 export function KycForm() {
   const [state, formAction, pending] = useActionState(
