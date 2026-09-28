@@ -19,6 +19,38 @@ export async function requireUser() {
   return user;
 }
 
+export async function requireActiveUser() {
+  const user = await requireUser();
+  const supabase = await createClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("account_status")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.account_status !== "active") {
+    redirect("/login?error=account_unavailable");
+  }
+
+  return user;
+}
+
+export async function requireAdmin() {
+  const user = await requireUser();
+  const supabase = await createClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role,account_status")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin" || profile.account_status !== "active") {
+    redirect("/dashboard");
+  }
+
+  return user;
+}
+
 export async function requireGuest() {
   const supabase = await createClient();
   const {
