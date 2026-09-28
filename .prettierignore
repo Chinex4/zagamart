@@ -3,8 +3,3 @@ node_modules
 coverage
 playwright-report
 test-results
-src/features/auth/components/login-form.tsx
-src/features/auth/components/reset-password-form.tsx
-src/features/auth/services/auth.service.test.ts
-src/features/kyc/actions/kyc.actions.ts
-src/features/kyc/schemas/kyc.schema.ts
