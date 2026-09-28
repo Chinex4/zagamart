@@ -150,7 +150,8 @@ export async function adminLoginAction(
       email,
       options: { shouldCreateUser: false },
     });
-    if (otpError) return { error: "We could not send your login code. Please try again." };
+    if (otpError)
+      return { error: "We could not send your login code. Please try again." };
     redirect(`/verify-login?email=${encodeURIComponent(email)}`);
   }
   redirect("/admin");
