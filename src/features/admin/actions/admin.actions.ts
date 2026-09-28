@@ -108,7 +108,8 @@ export async function updateEmailLoginOtpSettingAction(formData: FormData) {
   const { error } = await client.from("system_settings").upsert({
     key: "email_login_otp_enabled",
     value: enabled,
-    description: "Require an email one-time code after password authentication.",
+    description:
+      "Require an email one-time code after password authentication.",
     updated_by: admin.id,
     updated_at: new Date().toISOString(),
   });
