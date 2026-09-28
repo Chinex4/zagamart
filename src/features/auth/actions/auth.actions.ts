@@ -134,6 +134,21 @@ export async function adminLoginAction(
     await supabase.auth.signOut();
     return { error: "The administrator credentials are invalid." };
   }
+  const { data: setting } = await createAdminClient()
+    .from("system_settings")
+    .select("value")
+    .eq("key", "email_login_otp_enabled")
+    .maybeSingle();
+  if (setting?.value === true) {
+    const email = parsed.data.email.toLowerCase();
+    await supabase.auth.signOut();
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false },
+    });
+    if (otpError) return { error: "We could not send your login code. Please try again." };
+    redirect(`/verify-login?email=${encodeURIComponent(email)}`);
+  }
   redirect("/admin");
 }
 
@@ -192,8 +207,14 @@ export async function verifyLoginOtpAction(
   if (!email.includes("@") || !/^\d{6}$/.test(token))
     return { error: "Enter your email and the 6-digit code." };
   const supabase = await createClient();
-  const { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
-  if (error) return { error: "That code is invalid or has expired. Request a new code." };
+  const { data, error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+  if (error || !data.user) return { error: "That code is invalid or has expired. Request a new code." };
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role,account_status")
+    .eq("id", data.user.id)
+    .single();
+  if (canAccessAdmin(profile)) redirect("/admin");
   redirect("/dashboard");
 }
 
