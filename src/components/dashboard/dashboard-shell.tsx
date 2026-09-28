@@ -3,7 +3,27 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BadgeCheck, Bell, CircleDollarSign, CircleUserRound, ChevronRight, FileClock, Gauge, Gavel, List, LogOut, Menu, PlusCircle, ReceiptText, Settings, ShieldAlert, ShieldCheck, ShoppingBag, Users, X } from "lucide-react";
+import {
+  BadgeCheck,
+  Bell,
+  CircleDollarSign,
+  CircleUserRound,
+  ChevronRight,
+  FileClock,
+  Gauge,
+  Gavel,
+  List,
+  LogOut,
+  Menu,
+  PlusCircle,
+  ReceiptText,
+  Settings,
+  ShieldAlert,
+  ShieldCheck,
+  ShoppingBag,
+  Users,
+  X,
+} from "lucide-react";
 
 import { logoutAction } from "@/features/auth/actions/auth.actions";
 import { cn } from "@/lib/utils/cn";
@@ -11,7 +31,21 @@ import { cn } from "@/lib/utils/cn";
 export type NavigationItem = {
   href: string;
   label: string;
-  icon: "badge-check" | "bell" | "circle-dollar-sign" | "circle-user-round" | "file-clock" | "gauge" | "gavel" | "list" | "plus-circle" | "receipt-text" | "settings" | "shield-alert" | "shopping-bag" | "users";
+  icon:
+    | "badge-check"
+    | "bell"
+    | "circle-dollar-sign"
+    | "circle-user-round"
+    | "file-clock"
+    | "gauge"
+    | "gavel"
+    | "list"
+    | "plus-circle"
+    | "receipt-text"
+    | "settings"
+    | "shield-alert"
+    | "shopping-bag"
+    | "users";
 };
 
 const navigationIcons = {
@@ -29,7 +63,10 @@ const navigationIcons = {
   "shield-alert": ShieldAlert,
   "shopping-bag": ShoppingBag,
   users: Users,
-} satisfies Record<NavigationItem["icon"], React.ComponentType<{ className?: string }>>;
+} satisfies Record<
+  NavigationItem["icon"],
+  React.ComponentType<{ className?: string }>
+>;
 
 export function DashboardShell({
   children,

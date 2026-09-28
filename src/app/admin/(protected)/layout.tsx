@@ -20,12 +20,32 @@ async function AdminGuard({ children }: { children: React.ReactNode }) {
       icon: "badge-check" as const,
     },
     { href: "/admin/users", label: "Users", icon: "users" as const },
-    { href: "/admin/listings", label: "Listings", icon: "shopping-bag" as const },
-    { href: "/admin/transactions", label: "Transactions", icon: "list" as const },
-    { href: "/admin/fraud", label: "Fraud flags", icon: "shield-alert" as const },
+    {
+      href: "/admin/listings",
+      label: "Listings",
+      icon: "shopping-bag" as const,
+    },
+    {
+      href: "/admin/transactions",
+      label: "Transactions",
+      icon: "list" as const,
+    },
+    {
+      href: "/admin/fraud",
+      label: "Fraud flags",
+      icon: "shield-alert" as const,
+    },
     { href: "/admin/disputes", label: "Disputes", icon: "gavel" as const },
-    { href: "/admin/payouts", label: "Payouts", icon: "circle-dollar-sign" as const },
-    { href: "/admin/notifications", label: "Notifications", icon: "bell" as const },
+    {
+      href: "/admin/payouts",
+      label: "Payouts",
+      icon: "circle-dollar-sign" as const,
+    },
+    {
+      href: "/admin/notifications",
+      label: "Notifications",
+      icon: "bell" as const,
+    },
     { href: "/admin/audit", label: "Audit logs", icon: "file-clock" as const },
     { href: "/admin/settings", label: "Settings", icon: "settings" as const },
   ];
