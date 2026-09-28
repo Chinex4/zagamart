@@ -2,11 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
+import { requireUser } from "@/features/auth/services/auth.service";
 import {
   allowedKycMimeTypes,
   kycFileSchema,
 } from "@/features/kyc/schemas/kyc.schema";
-import { requireUser } from "@/features/auth/services/auth.service";
 import { createClient } from "@/lib/supabase/server";
 
 export type KycActionState = {
@@ -57,7 +57,9 @@ export async function submitKycAction(
     });
 
     if (!parsed.success || !allowedKycMimeTypes.includes(file.type as never)) {
-      return { error: "Documents must be JPG, PNG, or PDF and no larger than 5 MB." };
+      return {
+        error: "Documents must be JPG, PNG, or PDF and no larger than 5 MB.",
+      };
     }
   }
 
@@ -91,7 +93,9 @@ export async function submitKycAction(
         supabase.storage.from("kyc-documents").remove([studentIdPath]),
         supabase.storage.from("kyc-documents").remove([feeReceiptPath]),
       ]);
-      return { error: "Verification could not be submitted. Please try again." };
+      return {
+        error: "Verification could not be submitted. Please try again.",
+      };
     }
 
     revalidatePath("/verification");
