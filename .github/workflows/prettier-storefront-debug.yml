@@ -1,0 +1,19 @@
+name: Storefront Prettier Debug
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Show exact Prettier diff
+        run: |
+          npx prettier src/app/page.tsx src/features/auth/components/auth-shell.tsx src/features/auth/components/password-field.tsx src/features/auth/components/register-form.tsx --write
+          git diff -- src/app/page.tsx src/features/auth/components/auth-shell.tsx src/features/auth/components/password-field.tsx src/features/auth/components/register-form.tsx
