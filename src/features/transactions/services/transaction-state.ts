@@ -1,6 +1,8 @@
 import type { TransactionStatus } from "@/types/domain";
 
-const allowedTransitions: Readonly<Record<TransactionStatus, readonly TransactionStatus[]>> = {
+const allowedTransitions: Readonly<
+  Record<TransactionStatus, readonly TransactionStatus[]>
+> = {
   pending_payment: ["paid_held", "cancelled"],
   paid_held: ["release_pending", "disputed", "refunded"],
   release_pending: ["released", "disputed", "refunded"],
