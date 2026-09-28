@@ -12,7 +12,10 @@ import { AuthMessage } from "@/features/auth/components/auth-message";
 const initialState: AuthActionState = {};
 
 export function LoginForm() {
-  const [state, formAction, pending] = useActionState(loginAction, initialState);
+  const [state, formAction, pending] = useActionState(
+    loginAction,
+    initialState,
+  );
 
   return (
     <form action={formAction} className="space-y-5">
@@ -44,10 +47,7 @@ export function LoginForm() {
         >
           Forgot password?
         </Link>
-        <Link
-          className="text-slate-600 hover:text-slate-950"
-          href="/register"
-        >
+        <Link className="text-slate-600 hover:text-slate-950" href="/register">
           Create account
         </Link>
       </div>
