@@ -1,15 +1,3 @@
-import {
-  BadgeCheck,
-  Bell,
-  CircleDollarSign,
-  CircleUserRound,
-  Gauge,
-  Gavel,
-  List,
-  PlusCircle,
-  ReceiptText,
-  ShoppingBag,
-} from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { requireActiveUser } from "@/features/auth/services/auth.service";
 import { createClient } from "@/lib/supabase/server";
@@ -29,16 +17,36 @@ export default async function StudentLayout({
     .eq("id", user.id)
     .single();
   const items = [
-    { href: "/dashboard", label: "Dashboard", icon: Gauge },
-    { href: "/marketplace", label: "Marketplace", icon: ShoppingBag },
-    { href: "/listings", label: "My listings", icon: List },
-    { href: "/listings/new", label: "Create listing", icon: PlusCircle },
-    { href: "/transactions", label: "Transactions", icon: ReceiptText },
-    { href: "/disputes", label: "Disputes", icon: Gavel },
-    { href: "/verification", label: "Verification", icon: BadgeCheck },
-    { href: "/payouts", label: "Payouts", icon: CircleDollarSign },
-    { href: "/notifications", label: "Notifications", icon: Bell },
-    { href: "/profile", label: "Profile & account", icon: CircleUserRound },
+    { href: "/dashboard", label: "Dashboard", icon: "gauge" as const },
+    {
+      href: "/marketplace",
+      label: "Marketplace",
+      icon: "shopping-bag" as const,
+    },
+    { href: "/listings", label: "My listings", icon: "list" as const },
+    {
+      href: "/listings/new",
+      label: "Create listing",
+      icon: "plus-circle" as const,
+    },
+    {
+      href: "/transactions",
+      label: "Transactions",
+      icon: "receipt-text" as const,
+    },
+    { href: "/disputes", label: "Disputes", icon: "gavel" as const },
+    {
+      href: "/verification",
+      label: "Verification",
+      icon: "badge-check" as const,
+    },
+    { href: "/payouts", label: "Payouts", icon: "circle-dollar-sign" as const },
+    { href: "/notifications", label: "Notifications", icon: "bell" as const },
+    {
+      href: "/profile",
+      label: "Profile & account",
+      icon: "circle-user-round" as const,
+    },
   ];
   return (
     <DashboardShell
