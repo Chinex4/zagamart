@@ -1,4 +1,9 @@
-export type ListingStatus = "draft" | "active" | "reserved" | "sold" | "archived";
+export type ListingStatus =
+  | "draft"
+  | "active"
+  | "reserved"
+  | "sold"
+  | "archived";
 
 export interface MarketplaceListing {
   id: string;
@@ -11,7 +16,7 @@ export interface MarketplaceListing {
   status: ListingStatus;
   location_label: string | null;
   created_at: string;
-  listing_images: Array<{ storage_path: string; position: number }>;
+  listing_images: { storage_path: string; position: number }[];
 }
 
 export interface MarketplaceFilters {
