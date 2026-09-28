@@ -30,7 +30,9 @@ export async function openDisputeAction(formData: FormData) {
 export async function requestReleaseAction(formData: FormData) {
   const user = await requireUser();
   const transactionId = formData.get("transactionId");
-  if (typeof transactionId !== "string") throw new Error("Invalid transaction.");
+  if (typeof transactionId !== "string") {
+    throw new Error("Invalid transaction.");
+  }
 
   const admin = createAdminClient();
   const { data, error } = await admin.rpc("request_transaction_release", {
