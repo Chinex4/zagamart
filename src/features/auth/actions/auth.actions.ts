@@ -203,6 +203,28 @@ export async function resendEmailOtpAction(
   };
 }
 
+export async function resendLoginOtpAction(
+  _state: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
+  if (!email.includes("@")) return { error: "Enter a valid email address." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false },
+  });
+
+  if (error) {
+    return { error: "We could not send a new login code. Please try again." };
+  }
+
+  return { success: "A new login code has been sent to your email." };
+}
+
 export async function verifyLoginOtpAction(
   _state: AuthActionState,
   formData: FormData,
