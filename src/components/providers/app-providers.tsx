@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+
 import { makeStore } from "@/store/store";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
