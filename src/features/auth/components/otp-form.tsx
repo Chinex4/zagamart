@@ -2,17 +2,19 @@
 import { useActionState, useEffect, useState } from "react";
 import {
   resendEmailOtpAction,
+  resendLoginOtpAction,
   verifyEmailOtpAction,
+  verifyLoginOtpAction,
   type AuthActionState,
 } from "../actions/auth.actions";
 import { AuthMessage } from "./auth-message";
-export function OtpForm() {
+export function OtpForm({ defaultEmail = "", mode = "signup" }: { defaultEmail?: string; mode?: "signup" | "login" }) {
   const [state, action, pending] = useActionState(
-    verifyEmailOtpAction,
+    mode === "login" ? verifyLoginOtpAction : verifyEmailOtpAction,
     {} as AuthActionState,
   );
   const [resend, resendAction, resending] = useActionState(
-    resendEmailOtpAction,
+    mode === "login" ? resendLoginOtpAction : resendEmailOtpAction,
     {} as AuthActionState,
   );
   const [seconds, setSeconds] = useState(0);
@@ -34,6 +36,8 @@ export function OtpForm() {
             name="email"
             type="email"
             required
+            defaultValue={defaultEmail}
+            readOnly={Boolean(defaultEmail)}
             className="w-full rounded-xl border border-slate-300 px-4 py-3"
           />
         </label>
@@ -72,6 +76,8 @@ export function OtpForm() {
           type="email"
           required
           placeholder="Email used to register"
+          defaultValue={defaultEmail}
+          readOnly={Boolean(defaultEmail)}
           className="w-full rounded-xl border border-slate-300 px-4 py-3"
         />
         <button
