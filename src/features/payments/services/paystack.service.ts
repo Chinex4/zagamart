@@ -97,7 +97,10 @@ export function listPaystackBanks() {
   return request<PaystackBank[]>("/bank?currency=NGN&perPage=100");
 }
 
-export function resolvePaystackAccount(accountNumber: string, bankCode: string) {
+export function resolvePaystackAccount(
+  accountNumber: string,
+  bankCode: string,
+) {
   const params = new URLSearchParams({
     account_number: accountNumber,
     bank_code: bankCode,
