@@ -115,7 +115,11 @@ export function createPaystackTransferRecipient(input: {
   return request<{
     recipient_code: string;
     name: string;
-    details: { bank_name: string; bank_code: string; account_number: string };
+    details: {
+      bank_name: string;
+      bank_code: string;
+      account_number: string;
+    };
   }>("/transferrecipient", {
     method: "POST",
     body: JSON.stringify({
