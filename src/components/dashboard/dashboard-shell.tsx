@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChevronRight, LogOut, Menu, ShieldCheck, X } from "lucide-react";
+import { BadgeCheck, Bell, CircleDollarSign, CircleUserRound, ChevronRight, FileClock, Gauge, Gavel, List, LogOut, Menu, PlusCircle, ReceiptText, Settings, ShieldAlert, ShieldCheck, ShoppingBag, Users, X } from "lucide-react";
 
 import { logoutAction } from "@/features/auth/actions/auth.actions";
 import { cn } from "@/lib/utils/cn";
@@ -11,8 +11,25 @@ import { cn } from "@/lib/utils/cn";
 export type NavigationItem = {
   href: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: "badge-check" | "bell" | "circle-dollar-sign" | "circle-user-round" | "file-clock" | "gauge" | "gavel" | "list" | "plus-circle" | "receipt-text" | "settings" | "shield-alert" | "shopping-bag" | "users";
 };
+
+const navigationIcons = {
+  "badge-check": BadgeCheck,
+  bell: Bell,
+  "circle-dollar-sign": CircleDollarSign,
+  "circle-user-round": CircleUserRound,
+  "file-clock": FileClock,
+  gauge: Gauge,
+  gavel: Gavel,
+  list: List,
+  "plus-circle": PlusCircle,
+  "receipt-text": ReceiptText,
+  settings: Settings,
+  "shield-alert": ShieldAlert,
+  "shopping-bag": ShoppingBag,
+  users: Users,
+} satisfies Record<NavigationItem["icon"], React.ComponentType<{ className?: string }>>;
 
 export function DashboardShell({
   children,
@@ -71,7 +88,8 @@ export function DashboardShell({
         aria-label={`${mode} navigation`}
         className="flex-1 space-y-1 overflow-y-auto p-4"
       >
-        {items.map(({ href, label, icon: Icon }) => {
+        {items.map(({ href, label, icon }) => {
+          const Icon = navigationIcons[icon];
           const active =
             pathname === href ||
             (href !== "/admin" &&
