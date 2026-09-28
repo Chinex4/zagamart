@@ -72,3 +72,46 @@ export function hasValidPaystackSignature(
   const actual = Buffer.from(signature);
   return expected.length === actual.length && timingSafeEqual(expected, actual);
 }
+
+export interface PaystackBank {
+  name: string;
+  code: string;
+  active: boolean;
+  currency: string;
+  type: string;
+}
+
+export function listPaystackBanks() {
+  return request<PaystackBank[]>("/bank?currency=NGN&perPage=100");
+}
+
+export function resolvePaystackAccount(accountNumber: string, bankCode: string) {
+  const params = new URLSearchParams({
+    account_number: accountNumber,
+    bank_code: bankCode,
+  });
+  return request<{ account_number: string; account_name: string }>(
+    `/bank/resolve?${params.toString()}`,
+  );
+}
+
+export function createPaystackTransferRecipient(input: {
+  name: string;
+  accountNumber: string;
+  bankCode: string;
+}) {
+  return request<{
+    recipient_code: string;
+    name: string;
+    details: { bank_name: string; bank_code: string; account_number: string };
+  }>("/transferrecipient", {
+    method: "POST",
+    body: JSON.stringify({
+      type: "nuban",
+      name: input.name,
+      account_number: input.accountNumber,
+      bank_code: input.bankCode,
+      currency: "NGN",
+    }),
+  });
+}
