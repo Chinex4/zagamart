@@ -19,8 +19,8 @@ describe("transaction state machine", () => {
   });
 
   it("rejects invalid transitions", () => {
-    expect(() =>
-      assertTransactionTransition("cancelled", "released"),
-    ).toThrow("Invalid transaction transition");
+    expect(() => assertTransactionTransition("cancelled", "released")).toThrow(
+      "Invalid transaction transition",
+    );
   });
 });
