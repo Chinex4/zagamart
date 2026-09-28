@@ -2,19 +2,24 @@
 import { useActionState, useEffect, useState } from "react";
 import {
   resendEmailOtpAction,
-  resendLoginOtpAction,
   verifyEmailOtpAction,
   verifyLoginOtpAction,
   type AuthActionState,
 } from "../actions/auth.actions";
 import { AuthMessage } from "./auth-message";
-export function OtpForm({ defaultEmail = "", mode = "signup" }: { defaultEmail?: string; mode?: "signup" | "login" }) {
+export function OtpForm({
+  defaultEmail = "",
+  mode = "signup",
+}: {
+  defaultEmail?: string;
+  mode?: "signup" | "login";
+}) {
   const [state, action, pending] = useActionState(
     mode === "login" ? verifyLoginOtpAction : verifyEmailOtpAction,
     {} as AuthActionState,
   );
   const [resend, resendAction, resending] = useActionState(
-    mode === "login" ? resendLoginOtpAction : resendEmailOtpAction,
+    resendEmailOtpAction,
     {} as AuthActionState,
   );
   const [seconds, setSeconds] = useState(0);
@@ -62,35 +67,37 @@ export function OtpForm({ defaultEmail = "", mode = "signup" }: { defaultEmail?:
           {pending ? "Verifying…" : "Verify email"}
         </button>
       </form>
-      <form
-        action={async (data) => {
-          resendAction(data);
-          setSeconds(60);
-        }}
-        className="space-y-3"
-      >
-        <AuthMessage error={resend.error} success={resend.success} />
-        <input
-          aria-label="Email for resend"
-          name="email"
-          type="email"
-          required
-          placeholder="Email used to register"
-          defaultValue={defaultEmail}
-          readOnly={Boolean(defaultEmail)}
-          className="w-full rounded-xl border border-slate-300 px-4 py-3"
-        />
-        <button
-          disabled={resending || seconds > 0}
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold disabled:opacity-50"
+      {mode === "signup" ? (
+        <form
+          action={async (data) => {
+            resendAction(data);
+            setSeconds(60);
+          }}
+          className="space-y-3"
         >
-          {seconds
-            ? `Resend available in ${seconds}s`
-            : resending
-              ? "Sending…"
-              : "Resend code"}
-        </button>
-      </form>
+          <AuthMessage error={resend.error} success={resend.success} />
+          <input
+            aria-label="Email for resend"
+            name="email"
+            type="email"
+            required
+            placeholder="Email used to register"
+            defaultValue={defaultEmail}
+            readOnly={Boolean(defaultEmail)}
+            className="w-full rounded-xl border border-slate-300 px-4 py-3"
+          />
+          <button
+            disabled={resending || seconds > 0}
+            className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold disabled:opacity-50"
+          >
+            {seconds
+              ? `Resend available in ${seconds}s`
+              : resending
+                ? "Sending…"
+                : "Resend code"}
+          </button>
+        </form>
+      ) : null}
     </div>
   );
 }
