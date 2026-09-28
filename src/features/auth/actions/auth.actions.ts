@@ -13,6 +13,7 @@ import {
   normalizeMatricNumber,
 } from "@/features/auth/services/auth.service";
 import { publicEnvironment } from "@/lib/env";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuthActionState = {
@@ -60,10 +61,9 @@ export async function registerAction(
     };
   }
 
-  return {
-    success:
-      "Account created. Check your email to confirm your address before signing in.",
-  };
+  redirect(
+    `/verify-email?email=${encodeURIComponent(parsed.data.email.toLowerCase())}`,
+  );
 }
 
 export async function loginAction(
@@ -74,19 +74,39 @@ export async function loginAction(
     email: formData.get("email"),
     password: formData.get("password"),
   });
-
-  if (!parsed.success) {
+  if (!parsed.success)
     return { error: "Enter a valid email address and password." };
-  }
 
+  const email = parsed.data.email.toLowerCase();
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email.toLowerCase(),
+    email,
     password: parsed.data.password,
   });
 
   if (error) {
+    if (error.code === "email_not_confirmed") {
+      await supabase.auth.resend({ type: "signup", email });
+      redirect(`/verify-email?email=${encodeURIComponent(email)}`);
+    }
     return { error: "The email or password is incorrect." };
+  }
+
+  const { data: setting } = await createAdminClient()
+    .from("system_settings")
+    .select("value")
+    .eq("key", "email_login_otp_enabled")
+    .maybeSingle();
+
+  if (setting?.value === true) {
+    await supabase.auth.signOut();
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false },
+    });
+    if (otpError)
+      return { error: "We could not send your login code. Please try again." };
+    redirect(`/verify-login?email=${encodeURIComponent(email)}`);
   }
 
   redirect("/dashboard");
@@ -117,6 +137,22 @@ export async function adminLoginAction(
   if (!canAccessAdmin(profile)) {
     await supabase.auth.signOut();
     return { error: "The administrator credentials are invalid." };
+  }
+  const { data: setting } = await createAdminClient()
+    .from("system_settings")
+    .select("value")
+    .eq("key", "email_login_otp_enabled")
+    .maybeSingle();
+  if (setting?.value === true) {
+    const email = parsed.data.email.toLowerCase();
+    await supabase.auth.signOut();
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false },
+    });
+    if (otpError)
+      return { error: "We could not send your login code. Please try again." };
+    redirect(`/verify-login?email=${encodeURIComponent(email)}`);
   }
   redirect("/admin");
 }
@@ -165,6 +201,35 @@ export async function resendEmailOtpAction(
     success:
       "If the account is awaiting verification, a new code has been sent.",
   };
+}
+
+export async function verifyLoginOtpAction(
+  _state: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
+  const token = String(formData.get("token") ?? "").replace(/\s/g, "");
+  if (!email.includes("@") || !/^\d{6}$/.test(token))
+    return { error: "Enter your email and the 6-digit code." };
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email",
+  });
+  if (error || !data.user)
+    return {
+      error: "That code is invalid or has expired. Request a new code.",
+    };
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role,account_status")
+    .eq("id", data.user.id)
+    .single();
+  if (canAccessAdmin(profile)) redirect("/admin");
+  redirect("/dashboard");
 }
 
 export async function logoutAction(): Promise<void> {
