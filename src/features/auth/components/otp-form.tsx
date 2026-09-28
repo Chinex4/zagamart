@@ -71,33 +71,33 @@ export function OtpForm({
         </button>
       </form>
       <form
-          action={async (data) => {
-            resendAction(data);
-            setSeconds(60);
-          }}
-          className="space-y-3"
+        action={async (data) => {
+          resendAction(data);
+          setSeconds(60);
+        }}
+        className="space-y-3"
+      >
+        <AuthMessage error={resend.error} success={resend.success} />
+        <input
+          aria-label="Email for resend"
+          name="email"
+          type="email"
+          required
+          placeholder="Email used to register"
+          defaultValue={defaultEmail}
+          readOnly={Boolean(defaultEmail)}
+          className="w-full rounded-xl border border-slate-300 px-4 py-3"
+        />
+        <button
+          disabled={resending || seconds > 0}
+          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold disabled:opacity-50"
         >
-          <AuthMessage error={resend.error} success={resend.success} />
-          <input
-            aria-label="Email for resend"
-            name="email"
-            type="email"
-            required
-            placeholder="Email used to register"
-            defaultValue={defaultEmail}
-            readOnly={Boolean(defaultEmail)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3"
-          />
-          <button
-            disabled={resending || seconds > 0}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold disabled:opacity-50"
-          >
-            {seconds
-              ? `Resend available in ${seconds}s`
-              : resending
-                ? "Sending…"
-                : "Resend verification code"}
-          </button>
+          {seconds
+            ? `Resend available in ${seconds}s`
+            : resending
+              ? "Sending…"
+              : "Resend verification code"}
+        </button>
       </form>
     </div>
   );
