@@ -138,10 +138,10 @@ export function DashboardShell({
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
+                "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition",
                 active
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-950/30"
-                  : "text-slate-300 hover:bg-slate-800 hover:text-white",
+                  ? "bg-blue-600 !text-white shadow-lg shadow-blue-950/30 [&_svg]:text-white"
+                  : "!text-slate-200 hover:bg-slate-800 hover:!text-white [&_svg]:text-slate-200",
               )}
             >
               <Icon className="size-5 shrink-0" />
@@ -151,7 +151,7 @@ export function DashboardShell({
         })}
       </nav>
       <form action={logoutAction} className="border-t border-slate-800 p-4">
-        <button className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-300 hover:bg-red-950 hover:text-red-200">
+        <button className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold !text-slate-200 hover:bg-red-950 hover:!text-red-200 [&_svg]:text-slate-200">
           <LogOut className="size-5" /> Sign out
         </button>
       </form>
