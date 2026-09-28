@@ -9,10 +9,7 @@ export default async function NewListingPage() {
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10">
       <div className="mx-auto max-w-2xl">
-        <Link
-          href="/dashboard"
-          className="text-sm font-semibold text-blue-700"
-        >
+        <Link href="/dashboard" className="text-sm font-semibold text-blue-700">
           ← Dashboard
         </Link>
         <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-7 sm:p-9">
