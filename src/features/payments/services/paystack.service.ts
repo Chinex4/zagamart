@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+
 import { getServerEnvironment } from "@/lib/env";
+
 const PAYSTACK_API_URL = "https://api.paystack.co";
 interface Envelope<T> {
   status: boolean;
