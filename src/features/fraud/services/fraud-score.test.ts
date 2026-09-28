@@ -22,9 +22,9 @@ describe("fraud scoring", () => {
     expect(calculateFraudScore({ ...cleanSignals, kycSubmissions: 3 })).toBe(
       20,
     );
-    expect(
-      calculateFraudScore({ ...cleanSignals, hasRejectedKyc: true }),
-    ).toBe(10);
+    expect(calculateFraudScore({ ...cleanSignals, hasRejectedKyc: true })).toBe(
+      10,
+    );
     expect(
       calculateFraudScore({ ...cleanSignals, listingsLast10Minutes: 5 }),
     ).toBe(25);
