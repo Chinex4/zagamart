@@ -19,15 +19,13 @@ export async function POST(request: Request) {
   const reference = event.data?.reference;
   const eventId = `${event.event}:${event.data?.id ?? reference ?? "unknown"}`;
   const admin = createAdminClient();
-  const { error } = await admin
-    .from("payment_events")
-    .insert({
-      provider: "paystack",
-      provider_event_id: eventId,
-      event_type: event.event,
-      payment_reference: reference ?? null,
-      payload: event,
-    });
+  const { error } = await admin.from("payment_events").insert({
+    provider: "paystack",
+    provider_event_id: eventId,
+    event_type: event.event,
+    payment_reference: reference ?? null,
+    payload: event,
+  });
   if (error?.code === "23505") return NextResponse.json({ received: true });
   if (error) return new NextResponse("Unable to record event", { status: 500 });
   if (event.event === "charge.success" && reference) {
