@@ -13,8 +13,8 @@ import {
   normalizeMatricNumber,
 } from "@/features/auth/services/auth.service";
 import { publicEnvironment } from "@/lib/env";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export type AuthActionState = {
   error?: string;
@@ -61,7 +61,9 @@ export async function registerAction(
     };
   }
 
-  redirect(`/verify-email?email=${encodeURIComponent(parsed.data.email.toLowerCase())}`);
+  redirect(
+    `/verify-email?email=${encodeURIComponent(parsed.data.email.toLowerCase())}`,
+  );
 }
 
 export async function loginAction(
@@ -72,7 +74,8 @@ export async function loginAction(
     email: formData.get("email"),
     password: formData.get("password"),
   });
-  if (!parsed.success) return { error: "Enter a valid email address and password." };
+  if (!parsed.success)
+    return { error: "Enter a valid email address and password." };
 
   const email = parsed.data.email.toLowerCase();
   const supabase = await createClient();
@@ -101,7 +104,8 @@ export async function loginAction(
       email,
       options: { shouldCreateUser: false },
     });
-    if (otpError) return { error: "We could not send your login code. Please try again." };
+    if (otpError)
+      return { error: "We could not send your login code. Please try again." };
     redirect(`/verify-login?email=${encodeURIComponent(email)}`);
   }
 
@@ -209,7 +213,11 @@ export async function verifyLoginOtpAction(
   if (!email.includes("@") || !/^\d{6}$/.test(token))
     return { error: "Enter your email and the 6-digit code." };
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email",
+  });
   if (error || !data.user)
     return {
       error: "That code is invalid or has expired. Request a new code.",
