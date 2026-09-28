@@ -38,7 +38,9 @@ export default async function DisputeDetailPage({
             {dispute.transactions?.[0]?.listings?.[0]?.title ??
               "Transaction dispute"}
           </h1>
-          <p className="mt-5 text-sm leading-6 text-slate-700">{dispute.reason}</p>
+          <p className="mt-5 text-sm leading-6 text-slate-700">
+            {dispute.reason}
+          </p>
           <div className="mt-6 rounded-2xl bg-slate-100 p-4">
             <p className="text-sm text-slate-500">Status</p>
             <p className="font-semibold capitalize">
@@ -48,7 +50,9 @@ export default async function DisputeDetailPage({
           {dispute.resolution_note ? (
             <div className="mt-4 rounded-2xl border border-slate-200 p-4">
               <p className="text-sm font-semibold">Resolution</p>
-              <p className="mt-1 text-sm text-slate-700">{dispute.resolution_note}</p>
+              <p className="mt-1 text-sm text-slate-700">
+                {dispute.resolution_note}
+              </p>
             </div>
           ) : null}
         </section>
