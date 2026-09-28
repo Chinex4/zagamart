@@ -1,4 +1,5 @@
 "use client";
+
 import { useActionState, useEffect, useState } from "react";
 import {
   resendEmailOtpAction,
@@ -7,6 +8,7 @@ import {
   type AuthActionState,
 } from "../actions/auth.actions";
 import { AuthMessage } from "./auth-message";
+
 export function OtpForm({
   defaultEmail = "",
   mode = "signup",
