@@ -61,10 +61,7 @@ export async function registerAction(
     };
   }
 
-  return {
-    success:
-      "Account created. Check your email to confirm your address before signing in.",
-  };
+  redirect(`/verify-email?email=${encodeURIComponent(parsed.data.email.toLowerCase())}`);
 }
 
 export async function loginAction(
