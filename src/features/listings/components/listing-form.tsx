@@ -23,13 +23,27 @@ export function ListingForm() {
     <form action={action} className="space-y-5">
       <Field label="Title" name="title" placeholder="What are you selling?" />
       <div className="grid gap-5 sm:grid-cols-2">
-        <SelectField label="Category" name="category" options={LISTING_CATEGORIES} />
-        <SelectField label="Condition" name="condition" options={LISTING_CONDITIONS} />
+        <SelectField
+          label="Category"
+          name="category"
+          options={LISTING_CATEGORIES}
+        />
+        <SelectField
+          label="Condition"
+          name="condition"
+          options={LISTING_CONDITIONS}
+        />
       </div>
       <Field label="Price (₦)" name="priceNaira" type="number" min="1" />
-      <Field label="Meet-up location" name="locationLabel" placeholder="e.g. Site II gate" />
+      <Field
+        label="Meet-up location"
+        name="locationLabel"
+        placeholder="e.g. Site II gate"
+      />
       <label className="block">
-        <span className="mb-2 block text-sm font-medium text-slate-700">Description</span>
+        <span className="mb-2 block text-sm font-medium text-slate-700">
+          Description
+        </span>
         <textarea
           required
           minLength={10}
@@ -39,7 +53,9 @@ export function ListingForm() {
           className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
         />
       </label>
-      {state.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
+      {state.error ? (
+        <p className="text-sm text-red-700">{state.error}</p>
+      ) : null}
       <button
         disabled={pending}
         className="w-full rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white disabled:opacity-60"
@@ -50,11 +66,15 @@ export function ListingForm() {
   );
 }
 
-function Field(props: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+function Field(
+  props: React.InputHTMLAttributes<HTMLInputElement> & { label: string },
+) {
   const { label, ...inputProps } = props;
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-medium text-slate-700">{label}</span>
+      <span className="mb-2 block text-sm font-medium text-slate-700">
+        {label}
+      </span>
       <input
         required={inputProps.name !== "locationLabel"}
         className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
@@ -75,7 +95,9 @@ function SelectField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-medium text-slate-700">{label}</span>
+      <span className="mb-2 block text-sm font-medium text-slate-700">
+        {label}
+      </span>
       <select
         required
         name={name}
