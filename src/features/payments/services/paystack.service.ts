@@ -1,11 +1,15 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+
 import { getServerEnvironment } from "@/lib/env";
+
 const PAYSTACK_API_URL = "https://api.paystack.co";
+
 interface Envelope<T> {
   status: boolean;
   message: string;
   data: T;
 }
+
 export interface PaystackVerification {
   id: number;
   status: string;
@@ -13,11 +17,15 @@ export interface PaystackVerification {
   amount: number;
   currency: string;
 }
+
 function key() {
   const value = getServerEnvironment().PAYSTACK_SECRET_KEY;
-  if (!value) throw new Error("Paystack is not configured.");
+  if (!value) {
+    throw new Error("Paystack is not configured.");
+  }
   return value;
 }
+
 async function request<T>(path: string, init?: RequestInit) {
   const response = await fetch(`${PAYSTACK_API_URL}${path}`, {
     ...init,
@@ -29,10 +37,12 @@ async function request<T>(path: string, init?: RequestInit) {
     cache: "no-store",
   });
   const payload = (await response.json()) as Envelope<T>;
-  if (!response.ok || !payload.status)
+  if (!response.ok || !payload.status) {
     throw new Error(payload.message || "Paystack request failed.");
+  }
   return payload.data;
 }
+
 export async function initializePaystackTransaction(input: {
   email: string;
   amountKobo: number;
@@ -56,11 +66,13 @@ export async function initializePaystackTransaction(input: {
     }),
   });
 }
+
 export function verifyPaystackTransaction(reference: string) {
   return request<PaystackVerification>(
     `/transaction/verify/${encodeURIComponent(reference)}`,
   );
 }
+
 export function hasValidPaystackSignature(
   body: string,
   signature: string | null,
@@ -71,4 +83,50 @@ export function hasValidPaystackSignature(
   );
   const actual = Buffer.from(signature);
   return expected.length === actual.length && timingSafeEqual(expected, actual);
+}
+
+export interface PaystackBank {
+  name: string;
+  code: string;
+  active: boolean;
+  currency: string;
+  type: string;
+}
+
+export function listPaystackBanks() {
+  return request<PaystackBank[]>("/bank?currency=NGN&perPage=100");
+}
+
+export function resolvePaystackAccount(
+  accountNumber: string,
+  bankCode: string,
+) {
+  const params = new URLSearchParams({
+    account_number: accountNumber,
+    bank_code: bankCode,
+  });
+  return request<{ account_number: string; account_name: string }>(
+    `/bank/resolve?${params.toString()}`,
+  );
+}
+
+export function createPaystackTransferRecipient(input: {
+  name: string;
+  accountNumber: string;
+  bankCode: string;
+}) {
+  return request<{
+    recipient_code: string;
+    name: string;
+    details: { bank_name: string; bank_code: string; account_number: string };
+  }>("/transferrecipient", {
+    method: "POST",
+    body: JSON.stringify({
+      type: "nuban",
+      name: input.name,
+      account_number: input.accountNumber,
+      bank_code: input.bankCode,
+      currency: "NGN",
+    }),
+  });
 }
