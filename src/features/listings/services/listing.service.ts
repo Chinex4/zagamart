@@ -26,7 +26,10 @@ export async function getMarketplaceListings(
     query = query.lte("price_kobo", filters.maxPriceKobo);
 
   const { data, error } = await query;
-  if (error) throw new Error("Unable to load marketplace listings.");
+  if (error) {
+    console.error("Marketplace listing query failed", error);
+    return [];
+  }
 
   return (data ?? []) as MarketplaceListing[];
 }

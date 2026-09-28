@@ -8,6 +8,7 @@ import {
   type AuthActionState,
 } from "@/features/auth/actions/auth.actions";
 import { AuthMessage } from "@/features/auth/components/auth-message";
+import { PasswordField } from "@/features/auth/components/password-field";
 
 const initialState: AuthActionState = {};
 
@@ -30,16 +31,11 @@ export function LoginForm() {
           required
         />
       </label>
-      <label className="block">
-        <span className="mb-2 block text-sm font-medium">Password</span>
-        <input
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-        />
-      </label>
+      <PasswordField
+        name="password"
+        label="Password"
+        autoComplete="current-password"
+      />
       <div className="flex items-center justify-between gap-4 text-sm">
         <Link
           className="font-medium text-blue-700 hover:underline"
