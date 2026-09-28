@@ -26,7 +26,10 @@ export default async function VerificationPage() {
             stored privately and reviewed before trading is enabled.
           </p>
 
-          <VerificationState status={verification.status} rejectionReason={verification.rejectionReason} />
+          <VerificationState
+            status={verification.status}
+            rejectionReason={verification.rejectionReason}
+          />
         </div>
       </div>
     </main>
@@ -41,19 +44,31 @@ function VerificationState({
   rejectionReason: string | null;
 }) {
   if (status === "verified") {
-    return <p className="mt-8 rounded-2xl bg-emerald-50 p-5 font-medium text-emerald-800">Your student account is verified. Marketplace trading is enabled.</p>;
+    return (
+      <p className="mt-8 rounded-2xl bg-emerald-50 p-5 font-medium text-emerald-800">
+        Your student account is verified. Marketplace trading is enabled.
+      </p>
+    );
   }
 
   if (status === "pending") {
-    return <p className="mt-8 rounded-2xl bg-amber-50 p-5 font-medium text-amber-800">Your documents are awaiting administrator review.</p>;
+    return (
+      <p className="mt-8 rounded-2xl bg-amber-50 p-5 font-medium text-amber-800">
+        Your documents are awaiting administrator review.
+      </p>
+    );
   }
 
   return (
     <>
       {status === "rejected" ? (
         <div className="mt-8 rounded-2xl bg-red-50 p-5 text-red-800">
-          <p className="font-semibold">Your previous submission needs attention.</p>
-          {rejectionReason ? <p className="mt-2 text-sm">{rejectionReason}</p> : null}
+          <p className="font-semibold">
+            Your previous submission needs attention.
+          </p>
+          {rejectionReason ? (
+            <p className="mt-2 text-sm">{rejectionReason}</p>
+          ) : null}
         </div>
       ) : null}
       <KycForm />
