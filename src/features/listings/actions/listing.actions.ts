@@ -32,15 +32,16 @@ export async function createListingAction(
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("verification_status,account_status")
+    .select("role,verification_status,account_status")
     .eq("id", user.id)
     .single();
 
   if (
-    profile?.verification_status !== "verified" ||
+    profile?.role !== "student" ||
+    profile.verification_status !== "verified" ||
     profile.account_status !== "active"
   ) {
-    return { error: "Only verified active students can publish listings." };
+    return { error: "Only verified active student accounts can publish listings." };
   }
 
   const { data, error } = await supabase
@@ -58,7 +59,10 @@ export async function createListingAction(
     .select("id")
     .single();
 
-  if (error || !data) return { error: "Unable to publish the listing." };
+  if (error || !data) {
+    console.error("Listing creation failed", error);
+    return { error: "Unable to publish the listing. Please try again." };
+  }
 
   const images = formData
     .getAll("images")
