@@ -20,13 +20,31 @@ export function ResetPasswordForm() {
       <AuthMessage error={state.error} success={state.success} />
       <label className="block">
         <span className="mb-2 block text-sm font-medium">New password</span>
-        <input className={inputClassName} name="password" type="password" autoComplete="new-password" required />
+        <input
+          className={inputClassName}
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          required
+        />
       </label>
       <label className="block">
-        <span className="mb-2 block text-sm font-medium">Confirm password</span>
-        <input className={inputClassName} name="confirmPassword" type="password" autoComplete="new-password" required />
+        <span className="mb-2 block text-sm font-medium">
+          Confirm password
+        </span>
+        <input
+          className={inputClassName}
+          name="confirmPassword"
+          type="password"
+          autoComplete="new-password"
+          required
+        />
       </label>
-      <button className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60" disabled={pending} type="submit">
+      <button
+        className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+        disabled={pending}
+        type="submit"
+      >
         {pending ? "Updating..." : "Update password"}
       </button>
     </form>
